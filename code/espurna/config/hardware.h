@@ -2704,9 +2704,12 @@
 
     // LEDs
     #define LED1_PIN            13
-
     #define LED1_MODE           LED_MODE_FINDME
+    #define LED1_PIN_INVERSE    0
 
+    // remove some modules (save memory and potentially improve security)
+    #define ALEXA_SUPPORT           0
+    #define I2C_SUPPORT             0
 
 // -----------------------------------------------------------------------------
 // TEST boards (do not use!!)
