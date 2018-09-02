@@ -2675,6 +2675,39 @@
     #define MY92XX_MAPPING      0, 1, 2, 3, 4
     #define LIGHT_WHITE_FACTOR  (0.1)                    // White LEDs are way more bright in the B1
 
+// ------------------------------------------------------------------------------
+// SmartInsta - ESP8266 and a relay or two switch inputs on a very small (especially very "flat") board
+// suitable for mounting in a standard flush-mounted socket *with* the original outlet
+// https://no.page.yet
+// Jens Heilig (will make a web page soon, with PCB data)
+// -----------------------------------------------------------------------------
+
+#elif defined(SMARTINSTA_V3_RELAY)
+
+    // Info
+    #define MANUFACTURER        "SmartInsta"
+    #define DEVICE              "SmartInsta Relay"
+
+    // Buttons
+    #define BUTTON1_PIN         16
+    #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
+    #define BUTTON1_RELAY       1
+    #define BUTTON2_PIN         5
+    #define BUTTON2_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH | BUTTON_SET_PULLUP
+    #define BUTTON3_PIN         4
+    #define BUTTON3_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH | BUTTON_SET_PULLUP
+
+    // Relays
+    #define RELAY1_PIN          15
+
+    #define RELAY1_TYPE         RELAY_TYPE_NORMAL
+
+    // LEDs
+    #define LED1_PIN            13
+
+    #define LED1_MODE           LED_MODE_FINDME
+
+
 // -----------------------------------------------------------------------------
 // TEST boards (do not use!!)
 // -----------------------------------------------------------------------------

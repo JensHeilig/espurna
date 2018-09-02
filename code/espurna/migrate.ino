@@ -1106,6 +1106,19 @@ void migrate() {
             setSetting("myDCKIGPIO", 15);
             setSetting("relays", 1);
 
+        #elif defined(SMARTINSTA_V3_RELAY)
+
+            setSetting("board", 85);
+            setSetting("btnGPIO", 0, 16);
+            setSetting("btnGPIO", 1, 5);
+            setSetting("btnGPIO", 2, 4);
+            setSetting("btnRelay", 0, 15);
+            setSetting("ledGPIO", 0, 13);
+            setSetting("ledLogic", 0, 1);
+            setSetting("ledMode", 0, LED_MODE_FINDME);
+            setSetting("relayGPIO", 0, 15);
+            setSetting("relayType", 0, RELAY_TYPE_NORMAL);
+
         #else
 
             // Allow users to define new settings without migration config

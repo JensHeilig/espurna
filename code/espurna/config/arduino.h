@@ -95,6 +95,7 @@
 //#define LOHAS_9W
 //#define YJZK_SWITCH_1CH
 //#define YJZK_SWITCH_3CH
+//#define SMARTINSTA_V3_RELAY
 
 //--------------------------------------------------------------------------------
 // Features (values below are non-default values)
