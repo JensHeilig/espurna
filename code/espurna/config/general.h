@@ -9,8 +9,11 @@
 
 #define DEVICE_NAME             MANUFACTURER "_" DEVICE     // Concatenate both to get a unique device name
 
+// When defined, ADMIN_PASS must be 8..63 printable ASCII characters. See:
+// https://en.wikipedia.org/wiki/Wi-Fi_Protected_Access#Target_users_(authentication_key_distribution)
+// https://github.com/xoseperez/espurna/issues/1151
 #ifndef ADMIN_PASS
-#define ADMIN_PASS              "fibonacci"     // Default password (WEB, OTA, WIFI)
+#define ADMIN_PASS              "fibonacci"     // Default password (WEB, OTA, WIFI SoftAP)
 #endif
 
 #ifndef USE_PASSWORD
@@ -107,6 +110,10 @@
 #define TELNET_STA              0               // By default, disallow connections via STA interface
 #endif
 
+#ifndef TELNET_PASSWORD
+#define TELNET_PASSWORD         1               // Request password to start telnet session by default
+#endif
+
 #define TELNET_PORT             23              // Port to listen to telnet clients
 #define TELNET_MAX_CLIENTS      1               // Max number of concurrent telnet clients
 
@@ -141,7 +148,8 @@
 // EEPROM
 //------------------------------------------------------------------------------
 
-#define EEPROM_SIZE             4096            // EEPROM size in bytes
+#define EEPROM_SIZE             SPI_FLASH_SEC_SIZE  // EEPROM size in bytes (1 sector = 4096 bytes)
+
 //#define EEPROM_RORATE_SECTORS   2             // Number of sectors to use for EEPROM rotation
                                                 // If not defined the firmware will use a number based
                                                 // on the number of available sectors
@@ -158,8 +166,17 @@
 // HEARTBEAT
 //------------------------------------------------------------------------------
 
-#ifndef HEARTBEAT_ENABLED
-#define HEARTBEAT_ENABLED           1
+#define HEARTBEAT_NONE              0           // Never send heartbeat
+#define HEARTBEAT_ONCE              1           // Send it only once upon MQTT connection
+#define HEARTBEAT_REPEAT            2           // Send it upon MQTT connection and every HEARTBEAT_INTERVAL
+
+// Backwards compatibility check
+#if defined(HEARTBEAT_ENABLED) && (HEARTBEAT_ENABLED == 0)
+#define HEARTBEAT_MODE              HEARTBEAT_NONE
+#endif
+
+#ifndef HEARTBEAT_MODE
+#define HEARTBEAT_MODE              HEARTBEAT_REPEAT
 #endif
 
 #ifndef HEARTBEAT_INTERVAL
@@ -170,6 +187,7 @@
 
 // Topics that will be reported in heartbeat
 #define HEARTBEAT_REPORT_STATUS     1
+#define HEARTBEAT_REPORT_SSID       1
 #define HEARTBEAT_REPORT_IP         1
 #define HEARTBEAT_REPORT_MAC        1
 #define HEARTBEAT_REPORT_RSSI       1
@@ -219,6 +237,11 @@
 
 #ifndef BUTTON_LNGLNGCLICK_DELAY
 #define BUTTON_LNGLNGCLICK_DELAY    10000       // Time in ms holding the button down to get a long-long click
+#endif
+
+#ifndef BUTTON_MQTT_SEND_ALL_EVENTS
+#define BUTTON_MQTT_SEND_ALL_EVENTS 0           // 0 - to send only events the are bound to actions
+                                                // 1 - to send all button events to MQTT
 #endif
 
 //------------------------------------------------------------------------------
@@ -309,6 +332,9 @@
 #define WIFI_AP_CAPTIVE             1                   // Captive portal enabled when in AP mode
 #endif
 
+#ifndef WIFI_FALLBACK_APMODE
+#define WIFI_FALLBACK_APMODE        1                   // Fallback to AP mode if no STA connection
+#endif
 
 #ifndef WIFI_SLEEP_MODE
 #define WIFI_SLEEP_MODE             WIFI_NONE_SLEEP     // WIFI_NONE_SLEEP, WIFI_LIGHT_SLEEP or WIFI_MODEM_SLEEP
@@ -412,7 +438,9 @@
 // or in the Internet. Since the WebUI is just one compressed file with HTML, CSS and JS
 // there are no special requirements. Any static web server will do (NGinx, Apache, Lighttpd,...).
 // The only requirement is that the resource must be available under this domain.
+#ifndef WEB_REMOTE_DOMAIN
 #define WEB_REMOTE_DOMAIN           "http://tinkerman.cat"
+#endif
 
 // -----------------------------------------------------------------------------
 // WEBSOCKETS
@@ -446,6 +474,11 @@
 // This will only be enabled if WEB_SUPPORT is 1 (this is the default value)
 #ifndef API_ENABLED
 #define API_ENABLED                 0           // Do not enable API by default
+#endif
+
+#ifndef API_RESTFUL
+#define API_RESTFUL                 1           // A restful API requires changes to be issued as PUT requests
+                                                // Setting this to 0 will allow using GET to change relays, for instance
 #endif
 
 #ifndef API_BUFFER_SIZE
@@ -704,6 +737,7 @@
 #define MQTT_TOPIC_LED              "led"
 #define MQTT_TOPIC_BUTTON           "button"
 #define MQTT_TOPIC_IP               "ip"
+#define MQTT_TOPIC_SSID             "ssid"
 #define MQTT_TOPIC_VERSION          "version"
 #define MQTT_TOPIC_UPTIME           "uptime"
 #define MQTT_TOPIC_DATETIME         "datetime"
@@ -771,7 +805,7 @@
 // -----------------------------------------------------------------------------
 
 #ifndef SETTINGS_AUTOSAVE
-#define SETTINGS_AUTOSAVE       1           // Autosave settings o force manual commit
+#define SETTINGS_AUTOSAVE       1           // Autosave settings or force manual commit
 #endif
 
 #define SETTINGS_MAX_LIST_COUNT 10          // Maximum index for settings lists
@@ -898,8 +932,13 @@
 #define HOMEASSISTANT_SUPPORT   MQTT_SUPPORT    // Build with home assistant support (if MQTT, 1.64Kb)
 #endif
 
+#ifndef HOMEASSISTANT_ENABLED
 #define HOMEASSISTANT_ENABLED   0               // Integration not enabled by default
+#endif
+
+#ifndef HOMEASSISTANT_PREFIX
 #define HOMEASSISTANT_PREFIX    "homeassistant" // Default MQTT prefix
+#endif
 
 #ifndef HOMEASSISTANT_PAYLOAD_ON
 #define HOMEASSISTANT_PAYLOAD_ON    "1"         // Payload for ON and available messages
@@ -907,6 +946,14 @@
 
 #ifndef HOMEASSISTANT_PAYLOAD_OFF
 #define HOMEASSISTANT_PAYLOAD_OFF   "0"         // Payload for OFF and unavailable messages
+#endif
+
+#ifndef HOMEASSISTANT_PAYLOAD_AVAILABLE
+#define HOMEASSISTANT_PAYLOAD_AVAILABLE     "1" // Payload for available messages
+#endif
+
+#ifndef HOMEASSISTANT_PAYLOAD_NOT_AVAILABLE
+#define HOMEASSISTANT_PAYLOAD_NOT_AVAILABLE "0" // Payload for available messages
 #endif
 
 // -----------------------------------------------------------------------------
@@ -978,6 +1025,11 @@
 #define THINGSPEAK_URL              "/update"
 
 #define THINGSPEAK_MIN_INTERVAL     15000           // Minimum interval between POSTs (in millis)
+#define THINGSPEAK_FIELDS           8               // Number of fields
+
+#ifndef THINGSPEAK_TRIES
+#define THINGSPEAK_TRIES            3               // Number of tries when sending data (minimum 1)
+#endif
 
 // -----------------------------------------------------------------------------
 // SCHEDULER
@@ -1312,16 +1364,20 @@
 #define RFM69_MAX_TOPICS            50
 #endif
 
+#ifndef RFM69_MAX_NODES
+#define RFM69_MAX_NODES             255
+#endif
+
 #ifndef RFM69_DEFAULT_TOPIC
 #define RFM69_DEFAULT_TOPIC         "/rfm69gw/{node}/{key}"
 #endif
 
 #ifndef RFM69_NODE_ID
-#define RFM69_NODE_ID               2
+#define RFM69_NODE_ID               1
 #endif
 
 #ifndef RFM69_GATEWAY_ID
-#define RFM69_GATEWAY_ID            2
+#define RFM69_GATEWAY_ID            1
 #endif
 
 #ifndef RFM69_NETWORK_ID
@@ -1329,7 +1385,7 @@
 #endif
 
 #ifndef RFM69_PROMISCUOUS
-#define RFM69_PROMISCUOUS           1
+#define RFM69_PROMISCUOUS           0
 #endif
 
 #ifndef RFM69_PROMISCUOUS_SENDS

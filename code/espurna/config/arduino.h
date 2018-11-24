@@ -72,6 +72,7 @@
 //#define MAXCIO_WUS002S
 //#define YIDIAN_XSSSA05
 //#define TONBUX_XSSSA06
+//#define TONBUX_XSSSA01
 //#define GREEN_ESP8266RELAY
 //#define IKE_ESPIKE
 //#define ARNIEX_SWIFITCH
@@ -97,6 +98,10 @@
 //#define YJZK_SWITCH_3CH
 //#define XIAOMI_SMART_DESK_LAMP
 //#define ALLTERCO_SHELLY2
+//#define PHYX_ESP12_RGB
+//#define IWOOLE_LED_TABLE_LAMP
+//#define EXS_WIFI_RELAY_V50
+//#define TECKIN_SP22_V14
 
 //--------------------------------------------------------------------------------
 // Features (values below are non-default values)
@@ -157,11 +162,16 @@
 //#define GUVAS12SD_SUPPORT      1
 //#define HLW8012_SUPPORT        1
 //#define MHZ19_SUPPORT          1
+//#define MICS2710_SUPPORT       1
+//#define MICS5525_SUPPORT       1
 //#define NTC_SUPPORT            1
 //#define PMSX003_SUPPORT        1
 //#define PZEM004T_SUPPORT       1
+//#define SDS011_SUPPORT         1
+//#define SENSEAIR_SUPPORT       1
 //#define SHT3X_I2C_SUPPORT      1
 //#define SI7021_SUPPORT         1
 //#define SONAR_SUPPORT          1
 //#define TMP3X_SUPPORT          1
 //#define V9261F_SUPPORT         1
+//#define VL53L1X_SUPPORT        1

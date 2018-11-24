@@ -276,6 +276,11 @@
 #define SENSOR_SENSEAIR_ID          0x24
 #define SENSOR_GEIGER_ID            0x25
 #define SENSOR_NTC_ID               0x26
+#define SENSOR_SDS011_ID            0x27
+#define SENSOR_MICS2710_ID          0x28
+#define SENSOR_MICS5525_ID          0x29
+#define SENSOR_VEML6075_ID          0x30
+#define SENSOR_VL53L1X_ID           0x31
 
 //--------------------------------------------------------------------------------
 // Magnitudes
@@ -301,11 +306,16 @@
 #define MAGNITUDE_PM10              17
 #define MAGNITUDE_CO2               18
 #define MAGNITUDE_LUX               19
-#define MAGNITUDE_UV                20
-#define MAGNITUDE_DISTANCE          21
-#define MAGNITUDE_HCHO              22
-#define MAGNITUDE_GEIGER_CPM        23
-#define MAGNITUDE_GEIGER_SIEVERT    24
-#define MAGNITUDE_COUNT             25
+#define MAGNITUDE_UVA               20
+#define MAGNITUDE_UVB               21
+#define MAGNITUDE_UVI               22
+#define MAGNITUDE_DISTANCE          23
+#define MAGNITUDE_HCHO              24
+#define MAGNITUDE_GEIGER_CPM        25
+#define MAGNITUDE_GEIGER_SIEVERT    26
+#define MAGNITUDE_COUNT             27
+#define MAGNITUDE_NO2               28
+#define MAGNITUDE_CO                29
+#define MAGNITUDE_RESISTANCE        30
 
-#define MAGNITUDE_MAX               26
+#define MAGNITUDE_MAX               31

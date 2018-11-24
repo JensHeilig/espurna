@@ -1175,6 +1175,64 @@ void migrate() {
             setSetting("relayType", 0, RELAY_TYPE_NORMAL);
             setSetting("relayType", 1, RELAY_TYPE_NORMAL);
 
+        #elif defined(PHYX_ESP12_RGB)
+
+            setSetting("board", 89);
+
+            setSetting("relayProvider", RELAY_PROVIDER_LIGHT);
+            setSetting("lightProvider", LIGHT_PROVIDER_DIMMER);
+            setSetting("relays", 1);
+            setSetting("chGPIO", 0, 4);
+            setSetting("chGPIO", 1, 14);
+            setSetting("chGPIO", 2, 12);
+            setSetting("chLogic", 0, 0);
+            setSetting("chLogic", 1, 0);
+            setSetting("chLogic", 3, 0);
+
+        #elif defined(IWOOLE_LED_TABLE_LAMP)
+
+            setSetting("board", 90);
+            setSetting("relayProvider", RELAY_PROVIDER_LIGHT);
+            setSetting("lightProvider", LIGHT_PROVIDER_DIMMER);
+            setSetting("chGPIO", 0, 12);
+            setSetting("chGPIO", 1, 5);
+            setSetting("chGPIO", 2, 14);
+            setSetting("chGPIO", 3, 4);
+            setSetting("chLogic", 0, 0);
+            setSetting("chLogic", 1, 0);
+            setSetting("chLogic", 2, 0);
+            setSetting("chLogic", 3, 0);
+            setSetting("relays", 1);
+
+        #elif defined(EXS_WIFI_RELAY_V50)
+
+            setSetting("board", 91);
+
+            setSetting("btnGPIO", 0, 5);
+            setSetting("btnGPIO", 1, 4);
+            setSetting("btnRelay", 0, 0);
+            setSetting("btnRelay", 1, 1);
+
+            setSetting("relayGPIO", 0, 14);
+            setSetting("relayGPIO", 1, 13);
+            setSetting("relayResetGPIO", 0, 16);
+            setSetting("relayResetGPIO", 1, 12);
+            setSetting("relayType", 0, RELAY_TYPE_LATCHED);
+            setSetting("relayType", 0, RELAY_TYPE_LATCHED);
+
+            setSetting("ledGPIO", 1, 15);
+            setSetting("ledLogic", 1, 0);
+
+        #elif defined(TONBUX_XSSSA01)
+
+            setSetting("board", 92);
+            setSetting("ledGPIO", 0, 13);
+            setSetting("ledLogic", 0, 0);
+            setSetting("btnGPIO", 0, 13);
+            setSetting("btnRelay", 0, 0);
+            setSetting("relayGPIO", 0, 5);
+            setSetting("relayType", 0, RELAY_TYPE_NORMAL);
+
         #else
 
             // Allow users to define new settings without migration config

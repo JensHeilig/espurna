@@ -116,6 +116,39 @@
 #define BH1750_MODE                     BH1750_CONTINUOUS_HIGH_RES_MODE
 
 //------------------------------------------------------------------------------
+// VL53L1X
+// Enable support by passing VL53L1X_SUPPORT=1 build flag
+//------------------------------------------------------------------------------
+
+#ifndef VL53L1X_SUPPORT
+#define VL53L1X_SUPPORT                              0
+#endif
+
+#ifndef VL53L1X_I2C_ADDRESS
+#define VL53L1X_I2C_ADDRESS                          0x00          // 0x00 means auto
+#endif
+
+#ifndef VL53L1X_DISTANCE_MODE
+#define VL53L1X_DISTANCE_MODE                        VL53L1X::Long // The distance mode of the sensor. Can be one of
+#endif                                                             // `VL53L1X::Short`, `VL53L1X::Medium`, or `VL53L1X::Long.
+                                                                   // Shorter distance modes are less affected by ambient light
+                                                                   // but have lower maximum ranges, especially in the dark.
+
+
+#ifndef VL53L1X_MEASUREMENT_TIMING_BUDGET
+#define VL53L1X_MEASUREMENT_TIMING_BUDGET            140000        // The time, in microseconds, allocated for a single
+                                                                   // measurement. A longer timing budget allows for more
+                                                                   // accurate at the cost of power. The minimum budget is
+                                                                   // 20 ms (20000 us) in short distance mode and 33 ms for
+                                                                   // medium and long distance modes.
+#endif
+
+#ifndef VL53L1X_INTER_MEASUREMENT_PERIOD
+#define VL53L1X_INTER_MEASUREMENT_PERIOD             50            // Period, in milliseconds, determining how
+#endif                                                             // often the sensor takes a measurement.
+
+
+//------------------------------------------------------------------------------
 // BME280/BMP280
 // Enable support by passing BMX280_SUPPORT=1 build flag
 //------------------------------------------------------------------------------
@@ -245,7 +278,7 @@
 #define EMON_FILTER_SPEED               512         // Mobile average filter speed
 #define EMON_MAINS_VOLTAGE              230         // Mains voltage
 #define EMON_REFERENCE_VOLTAGE          3.3         // Reference voltage of the ADC
-#define EMON_CURRENT_RATIO              30          // Current ratio in the clamp (30V/1A)
+#define EMON_CURRENT_RATIO              30          // Current ratio in the clamp (30A/1V)
 #define EMON_REPORT_CURRENT             0           // Report current
 #define EMON_REPORT_POWER               1           // Report power
 #define EMON_REPORT_ENERGY              1           // Report energy
@@ -407,6 +440,11 @@
 #define HLW8012_USE_INTERRUPTS          1       // Use interrupts to trap HLW8012 signals
 #endif
 
+#ifndef HLW8012_WAIT_FOR_WIFI
+#define HLW8012_WAIT_FOR_WIFI           0       // Weather to enable interrupts only after
+                                                // wifi connection has been stablished
+#endif
+
 #ifndef HLW8012_INTERRUPT_ON
 #define HLW8012_INTERRUPT_ON            CHANGE  // When to trigger the interrupt
                                                 // Use CHANGE for HLW8012
@@ -429,6 +467,45 @@
 #ifndef MHZ19_TX_PIN
 #define MHZ19_TX_PIN                    15
 #endif
+
+//------------------------------------------------------------------------------
+// MICS-2710 (and MICS-4514) NO2 sensor
+// Enable support by passing MICS2710_SUPPORT=1 build flag
+//------------------------------------------------------------------------------
+
+#ifndef MICS2710_SUPPORT
+#define MICS2710_SUPPORT                0
+#endif
+
+#ifndef MICS2710_NOX_PIN
+#define MICS2710_NOX_PIN                0
+#endif
+
+#ifndef MICS2710_PRE_PIN
+#define MICS2710_PRE_PIN                4
+#endif
+
+#define MICS2710_PREHEAT_TIME           10000   // 10s preheat for NOX read
+#define MICS2710_RL                     820     // RL, load resistor
+#define MICS2710_R0                     2200    // R0 calibration value for NO2 sensor,
+                                                // Typical value as per datasheet
+
+//------------------------------------------------------------------------------
+// MICS-5525 (and MICS-4514) CO sensor
+// Enable support by passing MICS5525_SUPPORT=1 build flag
+//------------------------------------------------------------------------------
+
+#ifndef MICS5525_SUPPORT
+#define MICS5525_SUPPORT                0
+#endif
+
+#ifndef MICS5525_RED_PIN
+#define MICS5525_RED_PIN                0
+#endif
+
+#define MICS5525_RL                     820     // RL, load resistor
+#define MICS5525_R0                     750000  // R0 calibration value for NO2 sensor,
+                                                // Typical value as per datasheet
 
 //------------------------------------------------------------------------------
 // NTC sensor
@@ -465,6 +542,23 @@
 
 #ifndef NTC_BETA
 #define NTC_BETA                        3977    // Beta coeficient
+#endif
+
+//------------------------------------------------------------------------------
+// SDS011 particulates sensor
+// Enable support by passing SDS011_SUPPORT=1 build flag
+//------------------------------------------------------------------------------
+
+#ifndef SDS011_SUPPORT
+#define SDS011_SUPPORT                   0
+#endif
+
+#ifndef SDS011_RX_PIN
+#define SDS011_RX_PIN                    14
+#endif
+
+#ifndef SDS011_TX_PIN
+#define SDS011_TX_PIN                    12
 #endif
 
 //------------------------------------------------------------------------------
@@ -542,6 +636,18 @@
 
 #ifndef PZEM004T_HW_PORT
 #define PZEM004T_HW_PORT                Serial  // Hardware serial port (if PZEM004T_USE_SOFT == 0)
+#endif
+
+#ifndef PZEM004T_ADDRESSES
+#define PZEM004T_ADDRESSES              "192.168.1.1"  // Device(s) address(es), separated by space, "192.168.1.1 192.168.1.2 192.168.1.3"
+#endif
+
+#ifndef PZEM004T_READ_INTERVAL
+#define PZEM004T_READ_INTERVAL          1500    // Read interval between same device
+#endif
+
+#ifndef PZEM004T_MAX_DEVICES
+#define PZEM004T_MAX_DEVICES            3
 #endif
 
 //------------------------------------------------------------------------------
@@ -634,6 +740,25 @@
 #define V9261F_POWER_FACTOR             153699.0
 #define V9261F_RPOWER_FACTOR            V9261F_CURRENT_FACTOR
 
+//------------------------------------------------------------------------------
+// VEML6075 based power sensor
+// Enable support by passing VEML6075_SUPPORT=1 build flag
+//------------------------------------------------------------------------------
+
+#ifndef VEML6075_SUPPORT
+#define VEML6075_SUPPORT                  0
+#endif
+
+#ifndef VEML6075_INTEGRATION_TIME
+#define VEML6075_INTEGRATION_TIME         VEML6075::IT_100MS        // The time, in milliseconds, allocated for a single
+#endif                                                              // measurement. A longer timing budget allows for more
+                                                                    // accurate results at the cost of power.
+
+#ifndef VEML6075_DYNAMIC_MODE
+#define VEML6075_DYNAMIC_MODE             VEML6075::DYNAMIC_NORMAL  // The dynamic mode can either be normal or high. In high
+#endif                                                              // dynamic mode, the resolution increases by about two
+                                                                    // times.
+
 // =============================================================================
 // Sensor helpers configuration - can't move to dependencies.h
 // =============================================================================
@@ -656,8 +781,11 @@
     GEIGER_SUPPORT || \
     GUVAS12SD_SUPPORT || \
     HLW8012_SUPPORT || \
+    MICS2710_SUPPORT || \
+    MICS5525_SUPPORT || \
     MHZ19_SUPPORT || \
     NTC_SUPPORT || \
+    SDS011_SUPPORT || \
     SENSEAIR_SUPPORT || \
     PMSX003_SUPPORT || \
     PZEM004T_SUPPORT || \
@@ -665,7 +793,9 @@
     SI7021_SUPPORT || \
     SONAR_SUPPORT || \
     TMP3X_SUPPORT || \
-    V9261F_SUPPORT \
+    V9261F_SUPPORT || \
+    VEML6075_SUPPORT || \
+    VL53L1X_SUPPORT \
 )
 #endif
 
@@ -707,12 +837,6 @@
 
 #if SENSOR_SUPPORT
 
-#if SENSOR_DEBUG
-    #include "../config/debug.h"
-#endif
-
-#include "../sensors/BaseSensor.h"
-
 #if AM2320_SUPPORT
     #include "../sensors/AM2320Sensor.h"
 #endif
@@ -730,12 +854,10 @@
 #endif
 
 #if CSE7766_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/CSE7766Sensor.h"
 #endif
 
 #if DALLAS_SUPPORT
-    #include <OneWire.h>
     #include "../sensors/DallasSensor.h"
 #endif
 
@@ -768,7 +890,7 @@
 #endif
 
 #if GEIGER_SUPPORT
-    #include "../sensors/GeigerSensor.h"       // The main file for geiger counting module
+    #include "../sensors/GeigerSensor.h"
 #endif
 
 #if GUVAS12SD_SUPPORT
@@ -776,32 +898,38 @@
 #endif
 
 #if HLW8012_SUPPORT
-    #include <HLW8012.h>
     #include "../sensors/HLW8012Sensor.h"
 #endif
 
 #if MHZ19_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/MHZ19Sensor.h"
 #endif
 
+#if MICS2710_SUPPORT
+    #include "../sensors/MICS2710Sensor.h"
+#endif
+
+#if MICS5525_SUPPORT
+    #include "../sensors/MICS5525Sensor.h"
+#endif
+
 #if NTC_SUPPORT
-    #include "../sensors/AnalogSensor.h"
     #include "../sensors/NTCSensor.h"
 #endif
 
+#if SDS011_SUPPORT
+    #include "../sensors/SDS011Sensor.h"
+#endif
+
 #if SENSEAIR_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/SenseAirSensor.h"
 #endif
 
 #if PMSX003_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/PMSX003Sensor.h"
 #endif
 
 #if PZEM004T_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/PZEM004TSensor.h"
 #endif
 
@@ -822,8 +950,15 @@
 #endif
 
 #if V9261F_SUPPORT
-    #include <SoftwareSerial.h>
     #include "../sensors/V9261FSensor.h"
+#endif
+
+#if VEML6075_SUPPORT
+    #include "../sensors/VEML6075Sensor.h"
+#endif
+
+#if VL53L1X_SUPPORT
+    #include "../sensors/VL53L1XSensor.h"
 #endif
 
 #endif // SENSOR_SUPPORT
