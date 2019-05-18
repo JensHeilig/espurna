@@ -6,7 +6,18 @@
 
 extern "C" {
     #include "user_interface.h"
+    extern struct rst_info resetInfo;
 }
+
+#define UNUSED(x) (void)(x)
+
+// -----------------------------------------------------------------------------
+// System
+// -----------------------------------------------------------------------------
+
+uint32_t systemResetReason();
+uint8_t systemStabilityCounter();
+void systemStabilityCounter(uint8_t);
 
 // -----------------------------------------------------------------------------
 // API
@@ -24,7 +35,7 @@ extern "C" {
 // Broker
 // -----------------------------------------------------------------------------
 #if BROKER_SUPPORT
-    void brokerRegister(void (*)(const char *, unsigned char, const char *));
+    void brokerRegister(void (*)(const unsigned char, const char *, unsigned char, const char *));
 #endif
 
 // -----------------------------------------------------------------------------
@@ -133,6 +144,11 @@ typedef struct {
 } packet_t;
 
 // -----------------------------------------------------------------------------
+// Relay
+// -----------------------------------------------------------------------------
+#include <bitset>
+
+// -----------------------------------------------------------------------------
 // Settings
 // -----------------------------------------------------------------------------
 #include <Embedis.h>
@@ -142,15 +158,22 @@ template<typename T> String getSetting(const String& key, T defaultValue);
 template<typename T> String getSetting(const String& key, unsigned int index, T defaultValue);
 void settingsGetJson(JsonObject& data);
 bool settingsRestoreJson(JsonObject& data);
-void settingsRegisterCommand(const String& name, void (*call)(Embedis*));
-void settingsInject(void *data, size_t len);
-Stream & settingsSerial();
+
+// -----------------------------------------------------------------------------
+// Terminal
+// -----------------------------------------------------------------------------
+#if TERMINAL_SUPPORT
+    void terminalRegisterCommand(const String& name, void (*call)(Embedis*));
+    void terminalInject(void *data, size_t len);
+    Stream & terminalSerial();
+#endif
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 char * ltrim(char * s);
 void nice_delay(unsigned long ms);
+bool inline eraseSDKConfig();
 
 #define ARRAYINIT(type, name, ...) type name[] = {__VA_ARGS__};
 
@@ -167,7 +190,9 @@ void nice_delay(unsigned long ms);
     #define AsyncWebSocket void
     #define AwsEventType void *
 #endif
+typedef std::function<bool(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)> web_body_callback_f;
 typedef std::function<bool(AsyncWebServerRequest *request)> web_request_callback_f;
+void webBodyRegister(web_body_callback_f callback);
 void webRequestRegister(web_request_callback_f callback);
 
 // -----------------------------------------------------------------------------
@@ -176,6 +201,8 @@ void webRequestRegister(web_request_callback_f callback);
 #if WEB_SUPPORT
     typedef std::function<void(JsonObject&)> ws_on_send_callback_f;
     void wsOnSendRegister(ws_on_send_callback_f callback);
+    void wsSend(uint32_t, JsonObject& root);
+    void wsSend(JsonObject& root);
     void wsSend(ws_on_send_callback_f sender);
 
     typedef std::function<void(uint32_t, const char *, JsonObject&)> ws_on_action_callback_f;
@@ -183,6 +210,10 @@ void webRequestRegister(web_request_callback_f callback);
 
     typedef std::function<bool(const char *, JsonVariant&)> ws_on_receive_callback_f;
     void wsOnReceiveRegister(ws_on_receive_callback_f callback);
+
+    bool wsConnected();
+    bool wsConnected(uint32_t);
+    bool wsDebugSend(const char*, const char*);
 #else
     #define ws_on_send_callback_f void *
     #define ws_on_action_callback_f void *
@@ -196,3 +227,18 @@ void webRequestRegister(web_request_callback_f callback);
 typedef std::function<void(justwifi_messages_t code, char * parameter)> wifi_callback_f;
 void wifiRegister(wifi_callback_f callback);
 bool wifiConnected();
+
+// THERMOSTAT
+// -----------------------------------------------------------------------------
+#if THERMOSTAT_SUPPORT
+    typedef std::function<void(bool)> thermostat_callback_f;
+    void thermostatRegister(thermostat_callback_f callback);
+#else
+    #define thermostat_callback_f void *
+#endif
+
+// -----------------------------------------------------------------------------
+// RTC MEMORY
+// -----------------------------------------------------------------------------
+#include "rtcmem.h"
+
