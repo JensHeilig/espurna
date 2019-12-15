@@ -1117,10 +1117,10 @@ void migrate() {
             setSetting("myDCKIGPIO", 15);
             setSetting("relays", 1);
 
-        #elif defined(SMARTINSTA_V3_RELAY)
+        #elif defined(SMARTINSTA_V3)
 
             setSetting("board", 85);
-            setSetting("btnGPIO", 0, 16);
+            setSetting("btnGPIO", 0, 0);
             setSetting("btnGPIO", 1, 5);
             setSetting("btnGPIO", 2, 4);
             setSetting("btnRelay", 0, 15);

@@ -130,7 +130,7 @@
 //#define YJZK_SWITCH_2CH
 //#define YJZK_SWITCH_3CH
 //#define ZHILDE_EU44_W
-//#define SMARTINSTA_V3_RELAY
+//#define SMARTINSTA_V3
 
 //--------------------------------------------------------------------------------
 // Features (values below are non-default values)

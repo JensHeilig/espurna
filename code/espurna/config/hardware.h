@@ -104,8 +104,19 @@
     #define LED1_PIN            2
     #define LED1_PIN_INVERSE    1
 
-    #define I2C_SDA_PIN         4  // D2
-    #define I2C_SCL_PIN         5  // D1
+
+        // Want Zeroconf enabled
+    #define MDNS_SERVER_SUPPORT 1 
+    #define HOMEASSISTANT_SUPPORT 1
+
+
+    // remove some modules (save memory and potentially improve security)
+    #define MDNS_CLIENT_SUPPORT     0 
+    #define ALEXA_SUPPORT           0
+    #define I2C_SUPPORT             0
+    #define DOMOTICZ_SUPPORT        0
+    #define THINGSPEAK_SUPPORT      0
+
 
 #elif defined(WEMOS_D1_MINI_RELAYSHIELD)
 
@@ -3075,24 +3086,23 @@
 // Jens Heilig (will make a web page soon, with PCB data)
 // -----------------------------------------------------------------------------
 
-#elif defined(SMARTINSTA_V3_RELAY)
+#elif defined(SMARTINSTA_V3)
 
     // Info
     #define MANUFACTURER        "SmartInsta"
-    #define DEVICE              "SmartInsta Relay"
+    #define DEVICE              "SmartInstaV3"
 
     // Buttons
-    #define BUTTON1_PIN         16
+    #define BUTTON1_PIN         0
     #define BUTTON1_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH
-    #define BUTTON1_RELAY       1
     #define BUTTON2_PIN         5
     #define BUTTON2_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH | BUTTON_SET_PULLUP
+    #define BUTTON2_RELAY       1
     #define BUTTON3_PIN         4
     #define BUTTON3_MODE        BUTTON_PUSHBUTTON | BUTTON_DEFAULT_HIGH | BUTTON_SET_PULLUP
 
     // Relays
     #define RELAY1_PIN          15
-
     #define RELAY1_TYPE         RELAY_TYPE_NORMAL
 
     // LEDs
@@ -3100,10 +3110,17 @@
     #define LED1_MODE           LED_MODE_FINDME
     #define LED1_PIN_INVERSE    0
 
+    // Want Zeroconf enabled
+    #define MDNS_SERVER_SUPPORT 1 
+    #define HOMEASSISTANT_SUPPORT 1
+
+
     // remove some modules (save memory and potentially improve security)
+    #define MDNS_CLIENT_SUPPORT     0 
     #define ALEXA_SUPPORT           0
     #define I2C_SUPPORT             0
-
+    #define DOMOTICZ_SUPPORT        0
+    #define THINGSPEAK_SUPPORT      0
 // -----------------------------------------------------------------------------
 
 #elif defined(XIAOMI_SMART_DESK_LAMP)
